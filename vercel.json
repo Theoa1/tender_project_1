@@ -1,4 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install -g npm@11.4.1 && npm install --no-audit --no-fund --ignore-scripts"
+  "installCommand": "yarn install --ignore-scripts --network-timeout 300000"
 }
