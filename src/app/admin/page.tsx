@@ -13,8 +13,20 @@ export default async function AdminPage() {
   let serializable: Array<Record<string, unknown>> = [];
   let dbError: string | null = null;
   try {
-    const bookings = await prisma.booking.findMany({ orderBy: { createdAt: 'desc' } });
-    serializable = bookings.map((b) => ({
+    type BookingRow = {
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+      service: string;
+      preferredDate: Date;
+      notes: string | null;
+      status: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    const bookings = (await prisma.booking.findMany({ orderBy: { createdAt: 'desc' } })) as BookingRow[];
+    serializable = bookings.map((b: BookingRow) => ({
       ...b,
       preferredDate: b.preferredDate.toISOString(),
       createdAt: b.createdAt.toISOString(),

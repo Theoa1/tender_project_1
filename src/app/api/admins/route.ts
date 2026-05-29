@@ -28,7 +28,15 @@ export async function GET() {
       inviteExpires: true,
     },
   });
-  const list = admins.map((a) => ({
+  type AdminRow = {
+    id: string;
+    email: string;
+    role: string;
+    createdAt: Date;
+    passwordHash: string | null;
+    inviteExpires: Date | null;
+  };
+  const list = (admins as AdminRow[]).map((a: AdminRow) => ({
     id: a.id,
     email: a.email,
     role: a.role,

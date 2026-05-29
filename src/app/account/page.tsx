@@ -31,13 +31,25 @@ export default async function AccountPage() {
   const session = await getClientSession();
   if (!session) redirect('/account/login');
 
-  let bookings: Awaited<ReturnType<typeof prisma.booking.findMany>> = [];
+  type BookingRow = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    service: string;
+    preferredDate: Date;
+    notes: string | null;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  let bookings: BookingRow[] = [];
   let dbError: string | null = null;
   try {
-    bookings = await prisma.booking.findMany({
+    bookings = (await prisma.booking.findMany({
       where: { email: session.email },
       orderBy: { preferredDate: 'desc' },
-    });
+    })) as BookingRow[];
   } catch (e) {
     console.error('account: load bookings failed', e);
     dbError = 'Could not load your bookings right now. Please try again shortly.';
@@ -45,9 +57,9 @@ export default async function AccountPage() {
 
   const now = Date.now();
   const upcoming = bookings.filter(
-    (b) => new Date(b.preferredDate).getTime() >= now - 24 * 3600_000 && b.status !== 'cancelled'
+    (b: BookingRow) => new Date(b.preferredDate).getTime() >= now - 24 * 3600_000 && b.status !== 'cancelled'
   );
-  const past = bookings.filter((b) => !upcoming.includes(b));
+  const past = bookings.filter((b: BookingRow) => !upcoming.includes(b));
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>

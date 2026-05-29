@@ -49,7 +49,7 @@ export default function CodeInput({
     if (i < length - 1) refs.current[i + 1]?.focus();
   }
 
-  function handleKey(i: number, e: React.KeyboardEvent<HTMLInputElement>) {
+  function handleKey(i: number, e: React.KeyboardEvent) {
     if (e.key === 'Backspace' && !digits[i] && i > 0) {
       refs.current[i - 1]?.focus();
     } else if (e.key === 'ArrowLeft' && i > 0) {
