@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import {
   Container,
   Grid,
@@ -90,7 +91,9 @@ export default function ContactPage() {
             </Stack>
           </Grid>
           <Grid item xs={12} md={7}>
-            <BookingForm />
+            <Suspense fallback={null}>
+              <BookingForm />
+            </Suspense>
           </Grid>
         </Grid>
       </Box>
