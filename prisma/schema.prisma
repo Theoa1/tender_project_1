@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  name          String
+  email         String?
+  phone         String?
+  service       String
+  preferredDate DateTime
+  preferredTime String
+  message       String?
+  status        String   @default("pending") // pending | confirmed | completed | cancelled
+  emailVerified Boolean  @default(false)
+  phoneVerified Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+  @@index([phone])
+  @@index([createdAt])
+}
+
+model VerificationCode {
+  id         String    @id @default(cuid())
+  channel    String    // 'email' | 'phone'
+  target     String    // email (lowercased) or phone (E.164)
+  purpose    String    // 'booking' | 'login'
+  codeHash   String
+  attempts   Int       @default(0)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([target, purpose, consumedAt])
+  @@index([expiresAt])
+}
+
+model Admin {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String?
+  role          String    @default("admin") // 'owner' | 'admin' | 'viewer'
+  inviteToken   String?   @unique
+  inviteExpires DateTime?
+  invitedBy     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
