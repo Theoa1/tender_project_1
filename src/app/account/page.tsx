@@ -34,12 +34,15 @@ export default async function AccountPage() {
   type BookingRow = {
     id: string;
     name: string;
-    email: string;
-    phone: string;
+    email: string | null;
+    phone: string | null;
     service: string;
     preferredDate: Date;
-    notes: string | null;
+    preferredTime: string;
+    message: string | null;
     status: string;
+    emailVerified: boolean;
+    phoneVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
   };
